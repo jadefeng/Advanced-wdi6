@@ -1,0 +1,62 @@
+# directory 'tmp' 		# Create a folder called tmp
+
+# # file 'hello' => 'tmp' do  	# create a file called hello and put in temp folder
+# # 	sh "echo 'Hello World' >> tmp/hello"		# sh = shell
+# # end
+
+# file 'tmp/hello' => 'tmp' do  	# This won't repeat the creation since it knows that there's another file already in there
+# 	sh "echo 'Hello World' >> tmp/hello"		# sh = shell
+# end
+
+task :default => 'morning:get_ready' # This runs the default class automatically when you run the rakefile
+									# $ rake
+
+namespace :morning do 		# Puts all of the actions within 'morning' category, like db:seed and db:create
+	desc "Getting out of bed is tough." # This means that when we write rake -T, everything is called on the console with a description
+	task :turn_off_alarm do 
+		puts "Alarm disabled"
+	end
+	# $ rake turn_off_alarm
+
+	desc "Looking good."
+	task :groom_self do
+		puts "Brush teeth"
+		puts "Brush hair"
+		puts "Wash face"
+		puts "Makeup"
+	end
+	# $ rake turn_off_alarm groom_self
+
+	desc "Need this to live"
+	task :make_coffee do
+		# cups = 2
+		cups = ENV['COFFEE_CUPS'] || 2
+		puts "Made #{cups} cups of coffee."
+	end
+	# $ COFFEE_CUPS=12 rake make_coffee
+
+	task :walk_dog do
+		puts "Walk the dog! Woof woof"
+	end
+
+	## Rake all of them!
+	desc "Getting ready for Monday"
+	task :get_ready => [:turn_off_alarm, :groom_self, :make_coffee, :walk_dog] do
+		puts "Ready for the day!"
+	end
+end
+
+# You can reopen the namespace category and add more things
+namespace :morning do 
+	task :groom_self do
+		puts "Mohawk"
+	end
+end
+
+namespace :afternoon do 
+	task :make_coffee do
+		# sh 'rake morning:rake_coffee'
+		Rake::Task['morning:make_coffee'].invoke ## To call out the morning:make_coffee command existing task
+		puts "Ready for the afternoon babeh~"
+	end
+end
