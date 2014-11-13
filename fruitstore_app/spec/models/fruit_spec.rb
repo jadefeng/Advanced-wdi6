@@ -12,6 +12,10 @@
 require 'rails_helper'
 
 RSpec.describe Fruit, :type => :model do
+
+  it { should belong_to :shelf }  
+  # This assets the belong_to / has_many relationship
+
   # Need to put in some tests!
   describe "an apple" do 
   	before do 
